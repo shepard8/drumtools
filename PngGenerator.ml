@@ -74,5 +74,22 @@ let print_all c scorelines =
   print_score c scorelines
 
 let () =
-  print_all { oc = stdout; prefix = "" } ["hh8 hh hh hh hh hh hh hh"; "bd4 sn bd sn"]
+  let ic = open_in "rhythms.db" in
+  let rec rl directory n =
+    let line = input_line ic in
+    if String.length line <> 0
+    then begin
+      let scorelines = String.split_on_char '/' line in
+      let oc = open_out (directory ^ Filename.dir_sep ^ string_of_int n ^ ".ly") in
+      print_all { oc; prefix = "" } scorelines;
+      close_out oc
+    end;
+    rl directory (n + 1)
+  in
+  try rl "rhythms" 1
+  with End_of_file -> ()
+
+
+
+
 
