@@ -1,0 +1,7 @@
+- crop images so that they all have exactly the same height
+- parse config file
+- generate random sequence fulfilling config conditions
+- show result on screen
+- show cursor following partition at correct tempo
+- make partition flow at correct speed (show current measure on the left of the screen and as many next measures as possible
+- show relevant informations in the HUD (current tempo, measure ID, time remaining, elapsed time, measures remaining, done measures, etc.)
