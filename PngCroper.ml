@@ -14,6 +14,10 @@ let detect_staff_top img =
 let cut img topcut heightcut =
   Rgb24.sub img 0 topcut img.Rgb24.width heightcut
 
+let croppedimgpath imgpath =
+  let open Filename in
+  concat (dirname imgpath) ("cropped." ^ basename imgpath)
+
 let () =
   let imgpath = Sys.argv.(1) in
   let img = match Png.load_as_rgb24 imgpath [] with
@@ -27,4 +31,4 @@ let () =
   let topcut = stafftop - 42 in (* We leave 42 pixels above the staff *)
   let heightcut = 42 + 29 + 42 in (* And 42 pixels below, staff's height is 29px. *)
   let img' = Images.Rgb24 (cut img topcut heightcut) in
-  Png.save ("drumtools." ^ imgpath) [] img'
+  Png.save (croppedimgpath imgpath) [] img'
