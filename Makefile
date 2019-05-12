@@ -10,7 +10,7 @@ fills: PngCroper.exe
 	mkdir fills
 	ocaml LyGenerator.ml fills.db fills
 	cd fills; for f in `ls *.ly`; do lilypond --png $$f; done
-	for f in `ls fills/*.png`; do PngCroper.exe $$f; done
+	for f in `ls fills/*.png`; do ./PngCroper.exe $$f; done
 
 PngCroper.exe:
 	dune build PngCroper.exe
@@ -20,4 +20,5 @@ clean:
 	rm -rf rhythms
 	rm -rf fills
 	rm -f PngCroper.exe
+	dune clean
 	
