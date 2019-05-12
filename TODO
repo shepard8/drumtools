@@ -1,4 +1,3 @@
-- crop images so that they all have exactly the same height
 - parse config file
 - generate random sequence fulfilling config conditions
 - show result on screen
