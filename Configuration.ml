@@ -101,8 +101,41 @@ let defaultConfig = {
   measures = 36;
 }
 
+(* Export/Import to/from string *)
 (* TODO *)
-let readConf file =
-  ignore file;
+let fromString s =
+  ignore s;
   defaultConfig
+
+let rec listToSequences start cur = function
+  | [] -> ((start, cur) :: [])
+  | h :: t when h = cur + 1 -> listToSequences start h t
+  | h :: t -> (start, cur) :: listToSequences h h t
+
+let listToString = function
+  | [] -> ""
+  | h :: t ->
+      let seqs = listToSequences h h t in
+      let strings = List.map (fun (a, b) -> Printf.sprintf "%d-%d" a b) seqs in
+      String.concat "," strings
+
+let toString config =
+  Printf.sprintf {config|rhythms=%s
+fills=%s
+minbpm=%d
+maxbpm=%d
+minrepetitions=%d
+maxrepetitions=%d
+minfills=%d
+maxfills=%d
+measures=%d|config}
+    (listToString config.rhythms)
+    (listToString config.fills)
+    (fst config.bpm)
+    (snd config.bpm)
+    (fst config.repeats)
+    (snd config.repeats)
+    (fst config.fillsamount)
+    (snd config.fillsamount)
+    config.measures
 
