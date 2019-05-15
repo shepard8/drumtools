@@ -38,7 +38,7 @@ val setMeasures : config -> int -> config
 
 val defaultConfig : config
 
-val fromString : string -> config
+val fromString : string list -> config
 
 val toString : config -> string
 

@@ -5,5 +5,6 @@
 
 (executable
   (name SequenceGenerator)
-  (modules Configuration SequenceGenerator))
+  (modules Configuration SequenceGenerator)
+  (libraries str))
   

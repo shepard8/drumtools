@@ -28,12 +28,32 @@ let genericChangeRange absmin absmax configlist changetype low high =
   | Reset -> listdiff configlist range
   | Toggle -> listdiff range configlist @ listdiff configlist range
 
+let addRangesFromString absmin absmax configlist s =
+  let l = String.split_on_char ',' s in
+  List.fold_left (fun configlist part ->
+    let subparts = String.split_on_char '-' part in
+    match List.length subparts with
+    | 1 ->
+        let v = int_of_string (String.trim (List.hd subparts)) in
+        genericChangeRange absmin absmax configlist Set v v
+    | 2 -> 
+        let low = int_of_string (String.trim (List.hd subparts)) in
+        let high = int_of_string (String.trim (List.hd (List.tl subparts))) in
+        genericChangeRange absmin absmax configlist Set low high
+    | _ ->
+        Printf.printf "Wrong range : %s\n%!" part;
+        configlist
+  ) configlist l
+
 let absoluteMinRhythm = 1
 let absoluteMaxRhythm = 10 (* TODO retrieve this number from Rhythms directory *)
 
 let rhythmsUpdater = genericChangeRange absoluteMinRhythm absoluteMaxRhythm
 let changeRhythmRange config changetype low high =
   { config with rhythms = rhythmsUpdater config.rhythms changetype low high }
+let rhythmsAdder = addRangesFromString absoluteMinRhythm absoluteMaxRhythm
+let addRhythmsFromString config s =
+  { config with rhythms = rhythmsAdder config.rhythms s }
 
 let absoluteMinFill = 1
 let absoluteMaxFill = 5 (* TODO retrieve this number from Rhythms directory *)
@@ -41,6 +61,9 @@ let absoluteMaxFill = 5 (* TODO retrieve this number from Rhythms directory *)
 let fillsUpdater = genericChangeRange absoluteMinFill absoluteMaxFill
 let changeFillRange config changetype low high =
   { config with fills = fillsUpdater config.fills changetype low high }
+let fillsAdder = addRangesFromString absoluteMinRhythm absoluteMaxRhythm
+let addFillsFromString config s =
+  { config with fills = fillsAdder config.fills s }
 
 (* BPM update *)
 
@@ -101,11 +124,40 @@ let defaultConfig = {
   measures = 36;
 }
 
+let emptyConfig = {
+  rhythms = [];
+  fills = [];
+  bpm = (absoluteMinBpm, absoluteMaxBpm);
+  repeats = (absoluteMinRepeats, absoluteMaxRepeats);
+  fillsamount = (absoluteMinFills, absoluteMaxFills);
+  measures = absoluteMinMeasures;
+}
+
 (* Export/Import to/from string *)
-(* TODO *)
-let fromString s =
-  ignore s;
-  defaultConfig
+let fromString lines =
+  let relevantLines = List.filter (fun l -> l <> "" && l.[0] <> '#') lines in
+  List.fold_left (fun config line ->
+    let parts = String.split_on_char '=' line in
+    if (List.length parts = 2) then begin
+      let v = String.trim (List.hd (List.tl parts)) in
+      ignore v;
+      match String.trim (List.hd parts) with
+      | "rhythms" -> addRhythmsFromString config v
+      | "fills" -> addFillsFromString config v
+      | "minbpm" -> setMinBpm config (int_of_string v)
+      | "maxbpm" -> setMaxBpm config (int_of_string v)
+      | "minrepeats" -> setMinRepeats config (int_of_string v)
+      | "maxrepeats" -> setMaxRepeats config (int_of_string v)
+      | "minfills" -> setMinFillsAmount config (int_of_string v)
+      | "maxfills" -> setMaxFillsAmount config (int_of_string v)
+      | "measures" -> setMeasures config (int_of_string v)
+      | _ -> Printf.printf "Wrong config line : %s\n%!" line; config
+    end
+    else begin
+      Printf.printf "Ignored config line : %s\n%!" line;
+      config
+    end
+  ) emptyConfig relevantLines
 
 let rec listToSequences start cur = function
   | [] -> ((start, cur) :: [])
@@ -124,8 +176,8 @@ let toString config =
 fills=%s
 minbpm=%d
 maxbpm=%d
-minrepetitions=%d
-maxrepetitions=%d
+minrepeats=%d
+maxrepeats=%d
 minfills=%d
 maxfills=%d
 measures=%d|config}
