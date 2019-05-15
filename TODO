@@ -1,5 +1,3 @@
-- parse config file
-- generate random sequence fulfilling config conditions
 - show result on screen
 - show cursor following partition at correct tempo
 - make partition flow at correct speed (show current measure on the left of the screen and as many next measures as possible

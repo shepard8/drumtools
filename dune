@@ -4,7 +4,7 @@
   (libraries camlimages.png))
 
 (executable
-  (name SequenceGenerator)
-  (modules Configuration SequenceGenerator)
+  (name PartitionGenerator)
+  (modules Configuration PartitionGenerator)
   (libraries str))
   

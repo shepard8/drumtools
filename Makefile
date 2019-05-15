@@ -1,4 +1,4 @@
-all: SequenceGenerator.exe rhythms fills
+all: PartitionGenerator.exe rhythms fills
 
 rhythms: PngCroper.exe
 	mkdir rhythms
@@ -15,8 +15,8 @@ fills: PngCroper.exe
 PngCroper.exe:
 	dune build PngCroper.exe
 
-SequenceGenerator.exe:
-	dune build SequenceGenerator.exe
+PartitionGenerator.exe:
+	dune build PartitionGenerator.exe
 
 clean:
 	rm -rf rhythms
