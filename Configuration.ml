@@ -25,7 +25,7 @@ let genericChangeRange absmin absmax configlist changetype low high =
   let range = genRange absmin absmax low high in
   match changetype with
   | Set -> range @ listdiff configlist range (* to avoid duplicates *)
-  | Unset -> listdiff configlist range
+  | Reset -> listdiff configlist range
   | Toggle -> listdiff range configlist @ listdiff configlist range
 
 let absoluteMinRhythm = 1
@@ -44,10 +44,10 @@ let changeFillRange config changetype low high =
 
 (* BPM update *)
 
-let updatemin absmin (curmin, curmax) newmin =
+let updatemin absmin (_, curmax) newmin =
   (max newmin absmin, max curmax newmin)
 
-let updatemax absmax (curmin, curmax) newmax =
+let updatemax absmax (curmin, _) newmax =
   (min curmin newmax, min newmax absmax)
 
 let absoluteMinBpm = 40
@@ -103,5 +103,6 @@ let defaultConfig = {
 
 (* TODO *)
 let readConf file =
+  ignore file;
   defaultConfig
 

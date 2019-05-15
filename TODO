@@ -1,3 +1,4 @@
+- export config
 - parse config file
 - generate random sequence fulfilling config conditions
 - show result on screen

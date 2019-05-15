@@ -38,5 +38,5 @@ val setMeasures : config -> int -> config
 
 val defaultConfig : config
 
-val readConf : String -> config
+val readConf : string -> config
 

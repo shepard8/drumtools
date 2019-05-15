@@ -1,3 +1,9 @@
 (executable
   (name PngCroper)
+  (modules PngCroper)
   (libraries camlimages.png))
+
+(executable
+  (name SequenceGenerator)
+  (modules Configuration SequenceGenerator))
+  
