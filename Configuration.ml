@@ -15,8 +15,8 @@ let genRange absmin absmax low high =
   let low = max low absmin in
   let high = min high absmax in
   let rec aux acc n =
-    if n > high then acc else aux (n :: acc) (n + 1)
-  in aux [] low
+    if n < low then acc else aux (n :: acc) (n - 1)
+  in aux [] high
 
 let listdiff l1 l2 = (* l1 without the elements of l2 *)
   List.filter (fun e -> not (List.mem e l2)) l1
