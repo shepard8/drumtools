@@ -68,3 +68,4 @@ let () =
   let tempo = randomInRange config.Configuration.bpm in
   let l = genRhythms config tempo config.Configuration.measures in
   List.iter (fun m -> print_endline (stringOfMeasure m)) l
+
