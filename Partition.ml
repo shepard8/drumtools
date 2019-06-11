@@ -1,3 +1,5 @@
+open Base
+
 type measure_type = Fill | Rhythm
 
 type measure = {
@@ -20,18 +22,27 @@ let string_of_measure_type = function
   | Fill -> "F"
 
 let measure_of_string s =
-  let parts = String.split_on_char ' ' s in
+  let parts = String.split_on_chars s ~on:[' '; '\t'] in
+  let parts = List.filter parts ~f:String.is_empty in
   match parts with
   | measure_type :: id :: tempo :: [] ->
       let measure_type = measure_type_of_string measure_type in
-      let id = int_of_string id in
-      let tempo = int_of_string tempo in
+      let id = Int.of_string id in
+      let tempo = Int.of_string tempo in
       { measure_type; id; tempo }
   | _ -> raise (Parse_error s)
 
 let string_of_measure { measure_type; id; tempo } =
   Printf.sprintf "%s %d %d" (string_of_measure_type measure_type) id tempo
 
-val read : string -> t
-val write : t -> string -> unit
+let of_string s =
+  let lines = String.split_lines s in
+  List.map lines ~f:measure_of_string
+
+let to_string l =
+  let sep = "\n" in
+  let f = string_of_measure in
+  let measures = List.map l ~f in
+  String.concat ~sep measures
+  
 

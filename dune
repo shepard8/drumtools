@@ -6,10 +6,10 @@
 (executable
   (name PngCroper)
   (modules PngCroper)
-  (libraries camlimages.png))
+  (libraries drumtools camlimages.png))
 
 (executable
   (name PartitionGenerator)
-  (modules Configuration PartitionGenerator)
-  (libraries str))
+  (modules PartitionGenerator)
+  (libraries str drumtools))
   
